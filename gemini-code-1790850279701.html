@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBM AI and ML Assessment</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0b0f;
+            color: #f3f4f6;
+        }
+        .glass-card {
+            background: rgba(18, 18, 24, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-input {
+            background: rgba(28, 28, 38, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .glass-input:focus {
+            border-color: #ef4444;
+            outline: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-red-600 selection:text-white">
+
+    <!-- Header -->
+    <header class="w-full border-b border-white/10 glass-card sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-lg bg-red-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-red-600/30">IBM</div>
+            <div>
+                <h1 class="font-bold text-lg tracking-wide text-white">AI and ML Assessment</h1>
+                <p class="text-xs text-gray-400">Powered by IBM watsonx & Fundamentals Curriculum</p>
+            </div>
+        </div>
+        <div id="header-user-info" class="hidden text-xs text-gray-300 flex items-center space-x-4">
+            <span id="header-name" class="font-medium text-white"></span>
+            <span class="px-2.5 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 font-semibold" id="header-course"></span>
+            <button onclick="quitAssessment()" class="text-gray-400 hover:text-red-400 transition text-xs font-medium cursor-pointer">Quit</button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+        
+        <!-- SECTION 1: REGISTRATION SCREEN -->
+        <div id="screen-register" class="w-full max-w-lg glass-card rounded-2xl p-8 shadow-2xl transition-all duration-300">
+            <div class="text-center mb-8">
+                <span class="inline-block px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-xs font-semibold tracking-wider uppercase mb-3 border border-red-500/20">Candidate Portal</span>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Welcome to the Assessment</h2>
+                <p class="text-sm text-gray-400 mt-2">Please enter your details to initialize your personalized shuffled examination session.</p>
+            </div>
+
+            <form id="form-register" onsubmit="startAssessment(event)" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Full Name</label>
+                    <input type="text" id="reg-name" required class="w-full px-4 py-3 rounded-xl glass-input text-sm text-white placeholder-gray-500 transition" placeholder="e.g. Suhas Mallikarjuna">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Email Address</label>
+                    <input type="email" id="reg-email" required class="w-full px-4 py-3 rounded-xl glass-input text-sm text-white placeholder-gray-500 transition" placeholder="e.g. suhas@example.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-gray-300 mb-2">Course / Stream</label>
+                    <input type="text" id="reg-course" required class="w-full px-4 py-3 rounded-xl glass-input text-sm text-white placeholder-gray-500 transition" placeholder="e.g. B.Tech Computer Science / AI Track">
+                </div>
+
+                <div class="bg-black/30 rounded-xl p-4 border border-white/5 space-y-2 text-xs text-gray-400">
+                    <div class="flex items-center space-x-2 text-gray-300 font-medium">
+                        <svg class="w-4 h-4 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Assessment Rules & Structure:</span>
+                    </div>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>25 situation-based multiple-choice questions.</li>
+                        <li>Strict <strong>2-minute timer</strong> per question (auto-advances upon expiry).</li>
+                        <li>Questions and options are uniquely randomized per candidate.</li>
+                        <li>Temporary browser session storage preserves your progress.</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 px-4 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl shadow-lg shadow-red-600/30 transition duration-200 cursor-pointer flex items-center justify-center space-x-2">
+                    <span>Start Assessment</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- SECTION 2: QUIZ SCREEN -->
+        <div id="screen-quiz" class="w-full max-w-3xl glass-card rounded-2xl p-6 sm:p-8 shadow-2xl hidden transition-all duration-300">
+            <!-- Top Quiz Meta Bar -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-white/10 pb-4 mb-6 gap-4">
+                <div>
+                    <span id="quiz-progress-text" class="text-xs font-semibold tracking-wider text-red-500 uppercase">Question 1 of 25</span>
+                    <h3 id="quiz-category" class="text-lg font-bold text-white mt-0.5">Situation-Based AI Evaluation</h3>
+                </div>
+                <div class="flex items-center space-x-3 bg-black/40 px-4 py-2 rounded-xl border border-white/10">
+                    <svg class="w-4 h-4 text-red-500 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="text-xs font-medium text-gray-400">Time Left:</span>
+                    <span id="timer-display" class="font-mono font-bold text-white text-sm">02:00</span>
+                </div>
+            </div>
+
+            <!-- Question Box -->
+            <div class="mb-8">
+                <p id="question-text" class="text-base sm:text-lg font-medium text-gray-100 leading-relaxed"></p>
+            </div>
+
+            <!-- Options Grid -->
+            <div id="options-container" class="space-y-3 mb-8">
+                <!-- Dynamically injected option cards -->
+            </div>
+
+            <!-- Navigation Bar -->
+            <div class="flex justify-between items-center pt-4 border-t border-white/10">
+                <button id="btn-prev" onclick="prevQuestion()" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-sm font-medium transition cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
+                    Previous
+                </button>
+                <div id="question-dots" class="hidden sm:flex space-x-1.5 overflow-x-auto max-w-xs py-1">
+                    <!-- Dynamic navigation dots -->
+                </div>
+                <button id="btn-next" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-semibold shadow-lg shadow-red-600/20 transition cursor-pointer">
+                    Next Question
+                </button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: RESULTS SCREEN -->
+        <div id="screen-result" class="w-full max-w-3xl glass-card rounded-2xl p-6 sm:p-8 shadow-2xl hidden transition-all duration-300">
+            <div class="text-center pb-6 border-b border-white/10 mb-6">
+                <div class="w-16 h-16 bg-red-500/10 border border-red-500/30 text-red-500 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-4 shadow-xl shadow-red-500/10" id="result-score-badge">
+                    0%
+                </div>
+                <h2 class="text-2xl font-bold text-white">Assessment Completed</h2>
+                <p class="text-sm text-gray-400 mt-1">Here is your comprehensive performance breakdown recorded in your active session.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+                <div class="bg-black/40 border border-white/5 p-4 rounded-xl text-center">
+                    <span class="block text-xs text-gray-400 uppercase tracking-wider">Candidate Name</span>
+                    <span id="res-name" class="font-semibold text-white text-sm mt-1 block"></span>
+                </div>
+                <div class="bg-black/40 border border-white/5 p-4 rounded-xl text-center">
+                    <span class="block text-xs text-gray-400 uppercase tracking-wider">Email Address</span>
+                    <span id="res-email" class="font-semibold text-white text-sm mt-1 block truncate"></span>
+                </div>
+                <div class="bg-black/40 border border-white/5 p-4 rounded-xl text-center">
+                    <span class="block text-xs text-gray-400 uppercase tracking-wider">Course / Stream</span>
+                    <span id="res-course" class="font-semibold text-white text-sm mt-1 block"></span>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-md font-bold text-white">Question Review</h3>
+                <span id="res-correct-count" class="text-xs text-gray-400"></span>
+            </div>
+
+            <div id="review-container" class="space-y-4 max-h-96 overflow-y-auto pr-2 mb-8">
+                <!-- Detailed question review items injected here -->
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="window.print()" class="flex-1 py-3 px-4 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl text-sm transition cursor-pointer text-center">
+                    Print / Save Report
+                </button>
+                <button onclick="restartAssessment()" class="flex-1 py-3 px-4 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-red-600/30 transition cursor-pointer text-center">
+                    Retake Assessment
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-4 text-xs text-gray-500 border-t border-white/5">
+        &copy; 2026 IBM AI & ML Assessment Portal. All rights reserved. Temporary browser session storage active.
+    </footer>
+
+    <!-- Script Application Logic -->
+    <script>
+        // Master Question Bank (25 Situation-Based Questions where Correct Answer is ALWAYS Index 0)
+        const masterQuestions = [
+            {
+                q: "Situation: A hospital wants to build a system that takes patient symptoms, lab reports, and vital signs, and classifies whether a patient is at high, medium, or low risk for a specific cardiovascular condition. According to the curriculum, what branch of Artificial Intelligence does this classification task fall under?",
+                options: [
+                    "Machine Learning (Supervised Learning classification task)",
+                    "Reactive Machine AI without data storage",
+                    "Pure Generative AI text creation",
+                    "Rule-based Expert system with static IF-THEN statements"
+                ]
+            },
+            {
+                q: "Situation: Your development team is designing an autonomous warehouse robot that navigates corridors by trial and error, receiving positive reinforcement points for reaching checkpoints and penalties for hitting obstacles. Which subset of AI learning approach is being utilized?",
+                options: [
+                    "Reinforcement Learning",
+                    "Unsupervised clustering",
+                    "Supervised linear regression",
+                    "Rule-based static programming"
+                ]
+            },
+            {
+                q: "Situation: An enterprise wants to build an internal virtual assistant that reads company PDF handbooks and generates precise answers grounded strictly in those documents without hallucinating external facts. Which architecture should your team deploy?",
+                options: [
+                    "RAG (Retrieval-Augmented Generation) chatbot",
+                    "Rule-based keyword menu bot",
+                    "Pure unsupervised clustering model",
+                    "Reactive stateless chess engine"
+                ]
+            },
+            {
+                q: "Situation: You are reviewing NVIDIA's newly released open-weight model with 550B total parameters and a hybrid Mamba-Transformer Mixture-of-Experts architecture designed to act as the reasoning brain for long-running workflows. What model is this?",
+                options: [
+                    "Nemotron 3 Ultra",
+                    "IBM Watson Jeopardy Bot",
+                    "ELIZA Pattern Matcher",
+                    "ALICE AIML Chatbot"
+                ]
+            },
+            {
+                q: "Situation: A financial institution requires complete explainability for loan approvals so loan officers can mathematically understand why an AI model rejected a client's application. Which IBM trust pillar directly addresses this requirement?",
+                options: [
+                    "Explainability (ensuring people understand how and why decisions are reached)",
+                    "Generative hallucination tuning",
+                    "Autonomous multi-step agent execution",
+                    "Zero-shot Mamba token compression"
+                ]
+            },
+            {
+                q: "Situation: While deploying a generative chatbot for customer support, developers notice the model occasionally invents false product specifications with absolute confidence. What is this phenomenon formally called in AI terminology?",
+                options: [
+                    "Hallucination",
+                    "Intent slot filling",
+                    "Cosine similarity drop",
+                    "Token quantization"
+                ]
+            },
+            {
+                q: "Situation: Your startup is building a voice-activated helpline that converts spoken audio into text, processes the intent, and replies with synthesized speech. Which core field of AI is responsible for converting the incoming spoken words into text?",
+                options: [
+                    "Speech Recognition (Speech-to-Text)",
+                    "Convolutional Computer Vision",
+                    "Unsupervised anomaly clustering",
+                    "Reinforcement robotics"
+                ]
+            },
+            {
+                q: "Situation: A university admissions department needs a chatbot that collects specific required details from students over multiple turns—such as preferred course, graduation year, and contact number—asking follow-up questions until all fields are complete. What is this conversational design technique called?",
+                options: [
+                    "Slot filling",
+                    "Adversarial prompt injection",
+                    "Token pruning",
+                    "Zero-shot regression"
+                ]
+            },
+            {
+                q: "Situation: You are evaluating different AI system architectures. You notice a system that not only responds to a single text prompt but can autonomously plan, invoke external tools like web search or code execution, maintain state, and complete multi-step goals. How is this system classified?",
+                options: [
+                    "AI Agent (built around an AI model as its brain)",
+                    "Reactive Machine with zero memory",
+                    "Static rule-based decision tree",
+                    "Basic SQL database index"
+                ]
+            },
+            {
+                q: "Situation: An e-commerce platform wants to group unlabelled customer purchasing history and browsing behaviors into distinct market segments without predefined categories. Which machine learning approach is best suited for this?",
+                options: [
+                    "Unsupervised learning (Clustering)",
+                    "Supervised classification with labels",
+                    "Reinforcement trial-and-error rewards",
+                    "Self-supervised LLM pretraining"
+                ]
+            },
+            {
+                q: "Situation: During the AI development lifecycle, your team has defined the problem, gathered data, cleaned and split it into train/validation/test sets, and selected an algorithm. What is the immediate next step in the pipeline?",
+                options: [
+                    "Train the model to let it learn patterns from the training data",
+                    "Deploy immediately to production without evaluation",
+                    "Skip testing and monitor customer satisfaction",
+                    "Discard dataset and write manual IF-THEN rules"
+                ]
+            },
+            {
+                q: "Situation: IBM's suite includes a comprehensive studio used by developers and data scientists to build, train, tune, and deploy machine learning models and generative AI. What is the name of this platform component?",
+                options: [
+                    "watsonx.ai",
+                    "IBM Deep Blue chess computer",
+                    "ELIZA 1966 therapist simulator",
+                    "AutoGPT recursive script"
+                ]
+            },
+            {
+                q: "Situation: You need to implement a lightweight Python chatbot that compares incoming user messages against a dictionary of frequently asked questions using TF-IDF vectorization and cosine similarity. What kind of chatbot architecture does this represent?",
+                options: [
+                    "Intent-matching chatbot with NLP",
+                    "Autonomous multi-step coding agent",
+                    "Pure generative LLM API agent",
+                    "Hardware-accelerated Mamba model"
+                ]
+            },
+            {
+                q: "Situation: According to AI capability classifications, all current commercial AI applications—including spam filters, chess engines, facial recognition, and voice assistants—belong to which category?",
+                options: [
+                    "Narrow AI (Weak AI / ANI)",
+                    "General AI (Strong AI / AGI)",
+                    "Super AI (ASI)",
+                    "Self-aware conscious AI"
+                ]
+            },
+            {
+                q: "Situation: In 1966, MIT researcher Joseph Weizenbaum created one of the earliest conversational programs in history, which used simple pattern matching to imitate a Rogerian psychotherapist. What was its name?",
+                options: [
+                    "ELIZA",
+                    "ALICE",
+                    "Deep Blue",
+                    "Watson"
+                ]
+            },
+            {
+                q: "Situation: When building enterprise LLM applications, developers implement safety filters, block off-topic requests, mask personal phone numbers and IDs, and defend against prompt injection. What are these protective filters collectively called?",
+                options: [
+                    "Guardrails",
+                    "Intent slots",
+                    "Latent MoE routers",
+                    "Cosine thresholds"
+                ]
+            },
+            {
+                q: "Situation: You are examining AI functionality categories. A chess-playing computer program like IBM Deep Blue that has no memory and responds strictly to the current board position without recalling past moves represents which type?",
+                options: [
+                    "Reactive Machine",
+                    "Limited Memory system",
+                    "Theory of Mind agent",
+                    "Self-Aware AI"
+                ]
+            },
+            {
+                q: "Situation: Your machine learning model is evaluated on unseen test data, and you compute metrics such as accuracy, precision, recall, and F1-score. In which phase of the AI development lifecycle does this evaluation occur?",
+                options: [
+                    "Evaluate phase",
+                    "Problem definition phase",
+                    "Data collection phase",
+                    "Deployment phase"
+                ]
+            },
+            {
+                q: "Situation: In large language model pretraining, models learn by automatically predicting missing words or upcoming tokens from raw unlabelled text without manual human tags. What is this specific learning category called?",
+                options: [
+                    "Self-supervised learning",
+                    "Supervised classification",
+                    "Reinforcement learning from rewards",
+                    "Rule-based expert systems"
+                ]
+            },
+            {
+                q: "Situation: IBM's AI platform features a data store and lakehouse specifically built to organize, govern, and manage data for AI pipelines and analytics workloads. What is its official product name?",
+                options: [
+                    "watsonx.data",
+                    "watsonx Assistant",
+                    "Watson Jeopardy",
+                    "Nemotron Ultra"
+                ]
+            },
+            {
+                q: "Situation: You are designing a conversational bot where users interact via button menus and rigid keyword matching (if user says 'hello', reply 'hi'). The bot immediately breaks if a user inputs unexpected phrasing. What type of bot is this?",
+                options: [
+                    "Rule-based chatbot",
+                    "Generative LLM chatbot",
+                    "RAG document retrieval bot",
+                    "Voice streaming bot"
+                ]
+            },
+            {
+                q: "Situation: When building an LLM-powered chatbot in Python using an API client, why is it necessary to append each user message and assistant reply to a history array and send that full history with each API turn?",
+                options: [
+                    "To provide conversation context and memory across turns",
+                    "To prevent token quantization errors",
+                    "To train a brand new neural network from scratch",
+                    "To execute vector database cosine similarity"
+                ]
+            },
+            {
+                q: "Situation: Which IBM trust pillar ensures that user data privacy is rigorously protected, personal information is safeguarded, and user rights are fully respected across AI implementations?",
+                options: [
+                    "Privacy",
+                    "Explainability",
+                    "Fairness",
+                    "Transparency"
+                ]
+            },
+            {
+                q: "Situation: NVIDIA's Nemotron 3 Ultra achieves massive compute efficiency by activating only a small subset of specialist sub-networks for each generated token out of its 550 billion total parameters. What architecture enables this?",
+                options: [
+                    "Mixture-of-Experts (MoE)",
+                    "Simple linear regression",
+                    "Static IF-THEN rule trees",
+                    "ELIZA pattern matching"
+                ]
+            },
+            {
+                q: "Situation: During chatbot dialog management, when a user message is processed by the NLU engine, what term defines the specific underlying goal or objective behind what the user said (e.g., check_balance)?",
+                options: [
+                    "Intent",
+                    "Entity",
+                    "Slot",
+                    "Vector chunk"
+                ]
+            }
+        ];
+
+        // Session State Variables
+        let currentUser = null;
+        let shuffledQuiz = []; // Array of objects containing question & randomized options mapping
+        let currentQuestionIndex = 0;
+        let userAnswers = {}; // Map: questionOriginalIndex -> selectedOptionIndex
+        let timerInterval = null;
+        let timeLeft = 120; // 2 minutes per question
+
+        // Simple pseudo-random hash generator based on user email string for unique candidate shuffling
+        function getHashFromString(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = (hash << 5) - hash + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return Math.abs(hash);
+        }
+
+        function seededRandom(seed) {
+            let x = Math.sin(seed++) * 10000;
+            return x - Math.floor(x);
+        }
+
+        // Shuffle array using Fisher-Yates with a seed
+        function shuffleArrayWithSeed(array, seed) {
+            let arr = [...array];
+            let m = arr.length, t, i;
+            while (m) {
+                i = Math.floor(seededRandom(seed++) * m--);
+                t = arr[m];
+                arr[m] = arr[i];
+                arr[i] = t;
+            }
+            return arr;
+        }
+
+        // On Load Check Session Storage
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedSession = sessionStorage.getItem('ibm_ai_session');
+            if (savedSession) {
+                try {
+                    const data = JSON.parse(savedSession);
+                    currentUser = data.currentUser;
+                    shuffledQuiz = data.shuffledQuiz;
+                    currentQuestionIndex = data.currentQuestionIndex;
+                    userAnswers = data.userAnswers;
+                    
+                    if (data.isFinished) {
+                        showScreen('screen-result');
+                        renderResults();
+                    } else if (currentUser) {
+                        showScreen('screen-quiz');
+                        initHeaderUser();
+                        loadQuestion();
+                        startTimer();
+                    }
+                } catch (e) {
+                    console.error("Session restoration failed", e);
+                    sessionStorage.clear();
+                }
+            }
+        });
+
+        function saveState(isFinished = false) {
+            const state = {
+                currentUser,
+                shuffledQuiz,
+                currentQuestionIndex,
+                userAnswers,
+                isFinished
+            };
+            sessionStorage.setItem('ibm_ai_session', JSON.stringify(state));
+        }
+
+        function showScreen(screenId) {
+            ['screen-register', 'screen-quiz', 'screen-result'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function initHeaderUser() {
+            if (currentUser) {
+                document.getElementById('header-user-info').classList.remove('hidden');
+                document.getElementById('header-name').innerText = currentUser.name;
+                document.getElementById('header-course').innerText = currentUser.course;
+            }
+        }
+
+        // Start Assessment Form Submission
+        function startAssessment(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const course = document.getElementById('reg-course').value.trim();
+
+            if (!name || !email || !course) return;
+
+            currentUser = { name, email, course };
+            initHeaderUser();
+
+            // Generate unique seed from email string
+            const seed = getHashFromString(email);
+
+            // 1. Shuffle the 25 questions uniquely per user
+            const questionIndices = Array.from({ length: masterQuestions.length }, (_, i) => i);
+            const shuffledIndices = shuffleArrayWithSeed(questionIndices, seed);
+
+            // 2. For each question, shuffle its 4 options. Note: masterQuestions option index 0 is ALWAYS the correct answer!
+            shuffledQuiz = shuffledIndices.map((qIdx, orderIdx) => {
+                const qObj = masterQuestions[qIdx];
+                // Create array of option objects tracking original index
+                const optsWithMeta = qObj.options.map((optText, optOriginalIdx) => ({
+                    text: optText,
+                    isCorrect: (optOriginalIdx === 0)
+                }));
+                // Shuffle options using a derived seed
+                const shuffledOpts = shuffleArrayWithSeed(optsWithMeta, seed + orderIdx + 13);
+                
+                return {
+                    originalIndex: qIdx,
+                    questionText: qObj.q,
+                    options: shuffledOpts
+                };
+            });
+
+            currentQuestionIndex = 0;
+            userAnswers = {};
+
+            saveState(false);
+            showScreen('screen-quiz');
+            loadQuestion();
+            startTimer();
+        }
+
+        // Load Current Question
+        function loadQuestion() {
+            const qData = shuffledQuiz[currentQuestionIndex];
+            document.getElementById('quiz-progress-text').innerText = `Question ${currentQuestionIndex + 1} of ${shuffledQuiz.length}`;
+            document.getElementById('question-text').innerText = qData.questionText;
+
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+
+            qData.options.forEach((opt, idx) => {
+                const isSelected = userAnswers[currentQuestionIndex] === idx;
+                const optionLetter = ['A', 'B', 'C', 'D'][idx];
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `w-full text-left p-4 rounded-xl border transition flex items-center space-x-4 cursor-pointer ${
+                    isSelected 
+                        ? 'bg-red-600/20 border-red-500 text-white shadow-lg shadow-red-600/10' 
+                        : 'bg-black/30 border-white/10 hover:border-white/30 text-gray-300 hover:bg-white/5'
+                }`;
+                btn.onclick = () => selectOption(idx);
+
+                btn.innerHTML = `
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 ${
+                        isSelected ? 'bg-red-600 text-white' : 'bg-white/10 text-gray-400'
+                    }">${optionLetter}</div>
+                    <div class="text-sm font-medium flex-grow">${opt.text}</div>
+                `;
+                optContainer.appendChild(btn);
+            });
+
+            // Update Navigation Controls
+            document.getElementById('btn-prev').disabled = currentQuestionIndex === 0;
+            const nextBtn = document.getElementById('btn-next');
+            if (currentQuestionIndex === shuffledQuiz.length - 1) {
+                nextBtn.innerText = "Submit Assessment";
+                nextBtn.className = "px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold shadow-lg shadow-emerald-600/20 transition cursor-pointer";
+            } else {
+                nextBtn.innerText = "Next Question";
+                nextBtn.className = "px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-sm font-semibold shadow-lg shadow-red-600/20 transition cursor-pointer";
+            }
+
+            renderDots();
+            resetTimer();
+        }
+
+        function selectOption(optionIndex) {
+            userAnswers[currentQuestionIndex] = optionIndex;
+            saveState(false);
+            loadQuestion();
+        }
+
+        function renderDots() {
+            const dotsContainer = document.getElementById('question-dots');
+            dotsContainer.innerHTML = '';
+            shuffledQuiz.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                let bgClass = 'bg-white/20';
+                if (idx === currentQuestionIndex) bgClass = 'bg-red-500 ring-2 ring-red-500/40';
+                else if (userAnswers[idx] !== undefined) bgClass = 'bg-gray-400';
+
+                dot.className = `w-2.5 h-2.5 rounded-full transition-all ${bgClass}`;
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        // Timer Logic
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 120;
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoAdvance();
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 120;
+            updateTimerDisplay();
+            startTimer();
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const secs = (timeLeft % 60).toString().padStart(2, '0');
+            const timerEl = document.getElementById('timer-display');
+            timerEl.innerText = `${mins}:${secs}`;
+            if (timeLeft <= 15) {
+                timerEl.className = "font-mono font-bold text-red-500 text-sm animate-bounce";
+            } else {
+                timerEl.className = "font-mono font-bold text-white text-sm";
+            }
+        }
+
+        function autoAdvance() {
+            if (currentQuestionIndex < shuffledQuiz.length - 1) {
+                currentQuestionIndex++;
+                saveState(false);
+                loadQuestion();
+            } else {
+                submitAssessment();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                saveState(false);
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < shuffledQuiz.length - 1) {
+                currentQuestionIndex++;
+                saveState(false);
+                loadQuestion();
+            } else {
+                submitAssessment();
+            }
+        }
+
+        function submitAssessment() {
+            clearInterval(timerInterval);
+            saveState(true);
+            showScreen('screen-result');
+            renderResults();
+        }
+
+        function renderResults() {
+            document.getElementById('res-name').innerText = currentUser.name;
+            document.getElementById('res-email').innerText = currentUser.email;
+            document.getElementById('res-course').innerText = currentUser.course;
+
+            let correctCount = 0;
+            shuffledQuiz.forEach((q, qIdx) => {
+                const selectedOpt = userAnswers[qIdx];
+                if (selectedOpt !== undefined && q.options[selectedOpt].isCorrect) {
+                    correctCount++;
+                }
+            });
+
+            const percentage = Math.round((correctCount / shuffledQuiz.length) * 100);
+            document.getElementById('result-score-badge').innerText = `${percentage}%`;
+            document.getElementById('res-correct-count').innerText = `Score: ${correctCount} / ${shuffledQuiz.length} Correct`;
+
+            const reviewContainer = document.getElementById('review-container');
+            reviewContainer.innerHTML = '';
+
+            shuffledQuiz.forEach((q, qIdx) => {
+                const selectedOpt = userAnswers[qIdx];
+                const answeredObj = selectedOpt !== undefined ? q.options[selectedOpt] : null;
+                const correctObj = q.options.find(o => o.isCorrect);
+                const isCorrect = answeredObj && answeredObj.isCorrect;
+
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-xl border ${
+                    isCorrect ? 'bg-emerald-950/20 border-emerald-500/30' : 'bg-red-950/20 border-red-500/30'
+                }`;
+
+                let optionsHtml = '<ul class="mt-2 space-y-1 text-xs">';
+                q.options.forEach((opt, oIdx) => {
+                    let badge = '';
+                    if (opt.isCorrect) badge = '<span class="ml-2 px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-semibold">Correct Answer</span>';
+                    else if (selectedOpt === oIdx) badge = '<span class="ml-2 px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 font-semibold">Your Choice</span>';
+                    
+                    optionsHtml += `<li class="${opt.isCorrect ? 'text-emerald-300 font-medium' : (selectedOpt === oIdx ? 'text-red-300' : 'text-gray-400')}">• ${opt.text} ${badge}</li>`;
+                });
+                optionsHtml += '</ul>';
+
+                item.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <span class="text-xs font-bold ${isCorrect ? 'text-emerald-400' : 'text-red-400'}">Q${qIdx + 1}: ${isCorrect ? 'Correct' : 'Incorrect'}</span>
+                    </div>
+                    <p class="text-sm font-medium text-gray-200 mt-1">${q.questionText}</p>
+                    ${optionsHtml}
+                `;
+                reviewContainer.appendChild(item);
+            });
+        }
+
+        function quitAssessment() {
+            if (confirm("Are you sure you want to quit? Your current session progress will be reset.")) {
+                clearInterval(timerInterval);
+                sessionStorage.clear();
+                currentUser = null;
+                shuffledQuiz = [];
+                currentQuestionIndex = 0;
+                userAnswers = {};
+                document.getElementById('form-register').reset();
+                document.getElementById('header-user-info').classList.add('hidden');
+                showScreen('screen-register');
+            }
+        }
+
+        function restartAssessment() {
+            clearInterval(timerInterval);
+            sessionStorage.clear();
+            currentUser = null;
+            shuffledQuiz = [];
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            document.getElementById('form-register').reset();
+            document.getElementById('header-user-info').classList.add('hidden');
+            showScreen('screen-register');
+        }
+    </script>
+</body>
+</html>
